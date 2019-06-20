@@ -21,7 +21,7 @@ namespace CA_TheConversationAllDressedUp
         static void Main(string[] args)
         {
             //
-            // constants
+            // screen configurations
             // 
             ConsoleColor openingClosingScreenBackground = ConsoleColor.Gray;
             ConsoleColor openingClosingScreenForeground = ConsoleColor.DarkRed;
@@ -35,21 +35,27 @@ namespace CA_TheConversationAllDressedUp
             string bankChoice;
             string typeOfLoan;
             string userResponse;
-            double principle;
-            double interestRate;
-            int numberOfYears;
+            double loanPrinciple;
+            double loanInterestRate;
+            int loanTermMonths;
+            double monthlyPayment;
 
 
             //
-            // *** New Screen ***
-            // set background colors, foreground colors, and clear screen
+            //      **********************
+            //      *   Opening Screen   *
+            //      **********************
             //
+            // set cursor invisible, background colors, foreground colors, and clear screen
+            //
+            Console.CursorVisible = false;
             Console.BackgroundColor = openingClosingScreenBackground;
             Console.ForegroundColor = openingClosingScreenForeground;
             Console.Clear();
 
+
             //
-            // display a welcome screen
+            // display a opening screen
             // 
             Console.WriteLine();
             Console.WriteLine("\t\tThe Loan Consultant");
@@ -58,27 +64,35 @@ namespace CA_TheConversationAllDressedUp
             Console.ReadKey();
 
             //
-            // *** New Screen ***
-            // set background colors, foreground colors, and clear screen
+            //      ***************************
+            //      *   Initial User Screen   *
+            //      ***************************
             //
+            // set cursor invisible, background colors, foreground colors, and clear screen
+            //
+            Console.CursorVisible = true;
             Console.BackgroundColor = appScreenBackground;
             Console.ForegroundColor = appScreenForeground;
             Console.Clear();
 
             //
-            // enter conversation with user
+            // greet the user
             //
             Console.WriteLine();
             Console.WriteLine(" Hello!");
             Console.WriteLine(" This application is designed to calculate monthly loan payments.");
 
             //
-            // get their name and echo it back
+            // get the user's name and echo it back
             //
             Console.WriteLine();
             Console.Write(" What is your name? ");
             userName = Console.ReadLine();
             Console.WriteLine(" It is nice to meet you " + userName + ".");
+
+            //
+            // other methods to embed variables in a string
+            //
             //Console.WriteLine("It is nice to meet you {0}.", userName);
             //Console.WriteLine($"It is nice to meet you {userName}.");
 
@@ -90,16 +104,20 @@ namespace CA_TheConversationAllDressedUp
             userResponse = Console.ReadLine();
 
             //
-            // *** New Screen ***
-            // clear screen
-            //
-            Console.Clear();
-
-            //
             // get more information if the user is looking for a loan
             //
             if (userResponse == "yes")
             {
+                //
+                //      *******************************
+                //      *   User Information Screen   *
+                //      *******************************
+                //
+                // set cursor visible and clear screen
+                //
+                Console.CursorVisible = true;
+                Console.Clear();
+
                 //
                 // get user's favorite ski
                 //
@@ -115,7 +133,7 @@ namespace CA_TheConversationAllDressedUp
                 Console.Clear();
 
                 //
-                // get user ski info
+                // get user bank info
                 //
                 Console.WriteLine();
                 Console.Write(" What is the name of the bank you will applying to for the loan?");
@@ -127,54 +145,117 @@ namespace CA_TheConversationAllDressedUp
                 //
                 Console.WriteLine();
                 Console.WriteLine(" Please tell me the type of loan your are seeking so that I can determine the interest rate.");
-                Console.Write("  \"House\"  \"Vehicle\"  \"College\"  \"Personal\"");
+                Console.WriteLine("\t\"Home\"  \"Vehicle\"  \"College\"  \"Personal\"");
+                Console.Write(" Enter loan type:");
                 typeOfLoan = Console.ReadLine();
 
                 //
-                // provide feedback on the type of skiing
+                // get the principle of the loan
                 //
                 Console.WriteLine();
-                if (typeOfLoan == "downhill")
+                Console.Write(" Please tell me the amount of the loan.");
+                Console.Write(" Enter loan amount:");
+                userResponse = Console.ReadLine();
+                loanPrinciple = Convert.ToDouble(userResponse);
+
+                //
+                // get the length of the loan
+                //
+                Console.WriteLine();
+                Console.WriteLine(" Please tell me the length of the loan in years");
+                Console.Write(" Enter length of loan:");
+                userResponse = Console.ReadLine();
+                loanTermMonths = Convert.ToInt32(userResponse) * 12;
+
+                //
+                // assign the interest rate based on the loan type
+                //
+                Console.WriteLine();
+                if (typeOfLoan.ToUpper() == "HOME")
                 {
-                    Console.WriteLine("I have downhill skied for most of my life, but gave it up last year.");
-                    Console.WriteLine($"I hear the {favoriteArea} is a great place to ski {userName}.");
+                    loanInterestRate = 0.0375 / 12;
                 }
-                else if (typeOfLoan == "back country")
+                else if (typeOfLoan.ToUpper() == "VEHICLE")
                 {
-                    Console.WriteLine("I spend most of my time skiing now in back country.");
-                    Console.WriteLine($"Well {userName}, I am not sure I have skied at {favoriteArea}. I will have to give it a try.");
+                    loanInterestRate = 0.0425 / 12;
                 }
-                else // user's response was not valid
+                else if (typeOfLoan.ToUpper() == "COLLEGE")
                 {
-                    Console.WriteLine("I am afraid I don't recognize that type of skiing.");
+                    loanInterestRate = 0.0375 / 12;
+                }
+                else if (typeOfLoan.ToUpper() == "PERSONAL")
+                {
+                    loanInterestRate = 0.075 / 12;
+                }
+                else // user's response was not a valid loan type
+                {
+                    loanInterestRate = 0.0;
+                }
+
+                if (loanInterestRate != 0.0)
+                {
+                    //
+                    // calculate the monthly payments
+                    //
+                    double factor = (loanInterestRate * (Math.Pow(loanInterestRate + 1, loanTermMonths))) / (Math.Pow(loanInterestRate + 1, loanTermMonths) - 1);
+                    monthlyPayment = loanPrinciple * factor;
+                }
+                else
+                {
+                    Console.WriteLine(" I am afraid I don't recognize that type of loan.");
+                    Console.WriteLine(" I am sorry that I will not be able to help you.");
+                    Console.WriteLine(" Have a nice day.");
                 }
 
                 //
-                // thank the user and say good bye
+                //      *******************************
+                //      *   Loan Information Screen   *
+                //      *******************************
+                //
+                // clear screen
+                //
+                Console.Clear();
+
+                //
+                // display loan information
                 //
                 Console.WriteLine();
-                Console.WriteLine($"{userName}, it has been great getting learn more about your skiing interests.");
-                Console.WriteLine("Have a nice day.");
+
+
             }
-            else // user does not want a loan
+            else
             {
+                //
+                //      **********************************
+                //      *   User Not Interested Screen   *
+                //      **********************************
+                //
+                // set cursor visible and clear screen
+                //
+
+                Console.CursorVisible = true;
+                Console.Clear();
                 Console.WriteLine();
                 Console.WriteLine($" I am sorry you are not looking for a loan {userName}, but this application ");
                 Console.WriteLine(" is for people interested in the monthly payments for a specific loan.");
                 Console.WriteLine(" Have a nice day.");
+
+                //
+                // display a prompt to exit the application
+                //
+                Console.WriteLine();
+                Console.WriteLine(" Press any key to continue.");
+                Console.ReadKey();
             }
 
             //
-            // display a prompt to exit the application
+            //      **********************
+            //      *   Closing Screen   *
+            //      **********************
             //
-            Console.WriteLine();
-            Console.WriteLine(" Press any key to continue.");
-            Console.ReadKey();
-
+            // set cursor invisible, background colors, foreground colors, and clear screen
             //
-            // *** New Screen ***
-            // set background colors, foreground colors, and clear screen
-            //
+            Console.CursorVisible = false;
             Console.BackgroundColor = openingClosingScreenBackground;
             Console.ForegroundColor = openingClosingScreenForeground;
             Console.Clear();
@@ -185,7 +266,7 @@ namespace CA_TheConversationAllDressedUp
             Console.WriteLine();
             Console.WriteLine("\t\tThank You for Your Interest in Our Application");
             Console.WriteLine();
-            Console.WriteLine("\tPress any key to exit..");
+            Console.WriteLine("\tPress any key to exit.");
             Console.ReadKey();
         }
     }
